@@ -60,7 +60,6 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
   const delCharacter = () => {
     const active = inputs.find(input => input.active === true);
     const index = inputs.findIndex(input => input === active);
-    console.log(formData[active.index]);
     if (formData[active.index] !== '') {
       inputs[index].ref.current.focus();
       setFromData({
@@ -68,7 +67,6 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
         [active.index]: ''
       });
     } else {
-      console.log('here');
       if (index - 1 >= 0) {
         inputs[index - 1].ref.current.focus();
         setFromData({
@@ -97,7 +95,6 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
       [active.index]: input
     });
     if (index + 1 < 5) {
-      console.log('here');
       inputs[index + 1].ref.current.focus();
       let newInputs = [...inputs];
       newInputs.map((input, i) => {
@@ -119,7 +116,7 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
   }
 
   useEffect(() => {
-    console.log(inputs);
+    //console.log(inputs);
   }, [inputs])
 
   return (

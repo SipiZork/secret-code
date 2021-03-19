@@ -74,12 +74,11 @@ const App = () => {
         setAccess(true);
       }
     });
-    console.log('utána', newTips);
     setCodeHistory([newTips, ...codeHistory]);
   }
 
   useEffect(() => {
-    console.log(secretCode);
+    //console.log(secretCode);
   }, [secretCode])
 
   useEffect(() => {
@@ -87,7 +86,6 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    console.log('Change');
     if (access) {
       accessGranted.play();
     }

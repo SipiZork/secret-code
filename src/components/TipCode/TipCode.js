@@ -5,7 +5,6 @@ const TipCode = ({ inputs, setInputs, addNewTip, multiplyNumber, secretCode, for
 
   const onChange = (e) => {
     const index = inputs.findIndex(input => input.index === e.target.name);
-    console.log(e.target.value);
     if (e.target.value.length <= 1) {
       setFromData({
         ...formData,
@@ -63,7 +62,6 @@ const TipCode = ({ inputs, setInputs, addNewTip, multiplyNumber, secretCode, for
   }
 
   const onKeyDown = (e) => {
-    console.log(e);
     const inputs = [
       {
         index: 'code1',
