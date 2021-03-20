@@ -7,6 +7,7 @@ import Info from './components/Info/Info';
 import GlobalStyle from './components/GlobalyStyle';
 import Board from './components/Board/Board';
 import FullHistory from './components/History/FullHistory';
+import NewGame from './components/NewGame/NewGame';
 import accessDeniedSound from './assets/sounds/access_denied.mp3';
 import accessGrantedSound from './assets/sounds/access_grandted.mp3';
 
@@ -77,6 +78,12 @@ const App = () => {
     setCodeHistory([newTips, ...codeHistory]);
   }
 
+  const startNewGame = () => {
+    generateCode();
+    setCodeHistory([]);
+    setAccess(false);
+  }
+
   useEffect(() => {
     //console.log(secretCode);
   }, [secretCode])
@@ -103,6 +110,7 @@ const App = () => {
   return (
     <Body>
       <GlobalStyle />
+      <NewGame startNewGame={startNewGame} access={access} tries={codeHistory.length} />
       <div className={`info ${ infoOpen ? 'open' : 'close'}`} onClick={() => setInfoOpen(!infoOpen)} >
         <FontAwesomeIcon icon={faInfoCircle}/>
       </div>
