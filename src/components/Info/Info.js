@@ -14,7 +14,7 @@ const Info = ({ infoOpen }) => {
         <ul> 
             <li><span class="green">zöld</span> színnel jelenik meg a szám, akkor a szám jó és jó helyen is van</li>
             <li><span class="yellow">sárga</span> színnel jelenik meg a szám, akkor a szám jó, de rossz helyen van</li>
-            <li><span class="white">fehér</span> színnel jelenik meg a szám, akkor a szám egyáltalán nem szerep a kódban</li>
+            <li><span class="red">vörös</span> színnel jelenik meg a szám, akkor a szám egyáltalán nem szerep a kódban</li>
         </ul>
         <h3>Egyszerű mód</h3>
         <p>Egyszerű módban minden szám csak egyszer szerepelhet a kódban</p>
@@ -37,10 +37,15 @@ const StyledInfo = styled.div`
   opacity: 0;
   display: flex;
   flex-direction: column;
+  z-index: 5;
   gap: .5rem;
   background: rgb(5,5,5);
   color: rgb(180,180,180);
   background: linear-gradient(-52deg, rgba(5,5,5,1) 0%, rgba(8,8,8,1) 73%, rgba(56,56,56,1) 100%);
+
+  @media screen and (max-width: 350px) {
+    width: 100vw;
+  }
 
   label {
     display: block;
@@ -96,7 +101,7 @@ const StyledInfo = styled.div`
         }
         &:nth-child(3) {
           &:before {
-            color: white;
+            color: red;
           }
         }
         span {
@@ -106,8 +111,8 @@ const StyledInfo = styled.div`
           &.yellow {
             color: yellow;
           }
-          &.white {
-            color: white;
+          &.red {
+            color: red;
           }
         }
       }

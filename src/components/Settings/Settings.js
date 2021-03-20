@@ -1,19 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
+import Button from '../Button/Button';
 
-const Settings = ({ settingsOpen, multiplyNumber, changeMultiplyNumbers, historyPosition, setHistoryPosition }) => {
+const Settings = ({ settingsOpen, multiplyNumber, changeMultiplyNumbers, historyPosition, setHistoryPosition, startNewGame }) => {
   return (
     <StyledSettings className={settingsOpen ? 'open' : 'close'}>
       <h2>Beállítások</h2>
       <article>
-        <label className="simple-mode">
+        <label>
           Egyszerű mód {` `}
           <input type="checkbox" checked={!multiplyNumber} onChange={() => changeMultiplyNumbers()} />
         </label>
-        <label className="simple-mode">
+        <label>
           Bal oldali előzmények {` `}
           <input type="checkbox" checked={historyPosition} onChange={() => setHistoryPosition(!historyPosition)} />
         </label>
+      </article>
+      <article>
+      <Button text="Új játék" onClick={() => startNewGame()} />
       </article>
     </StyledSettings>
   )
@@ -36,11 +40,63 @@ const StyledSettings = styled.div`
   flex-direction: column;
   gap: .5rem;
   background: rgb(5,5,5);
+  z-index: 5;
   background: linear-gradient(52deg, rgba(5,5,5,1) 0%, rgba(8,8,8,1) 73%, rgba(56,56,56,1) 100%);
+  @media screen and (max-width: 350px) {
+    transform: translateX(100vw);
+    width: 100vw;
+  }
 
   label {
     display: block;
     margin-bottom: .5rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    input[type="checkbox"] {
+      position: relative;
+      width: 3rem;
+      height: 1rem;
+      -webkit-appearance: none;
+      background: #c6c6c6;
+      outline: none;
+      border-radius: 2rem;
+      box-shadow: inset 0 0 5px rgba(0,0,0,.8);
+      cursor: pointer;
+      transition: all .35s;
+
+      @media screen and (max-width: 350px) {
+        width: 3.5rem;
+        height: 1.5rem;
+      }
+    }
+
+    input:checked[type="checkbox"] {
+      background: #76ff00;
+    }
+
+    input[type="checkbox"]:before {
+      content: '';
+      position: absolute;
+      width: 1rem;
+      height: 1rem;
+      transform: scale(1.3);
+      border-radius: 2rem;
+      background: white;
+      top: 0;
+      left: 0;
+      transition: all .35s;
+      @media screen and (max-width: 350px) {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+    input:checked[type="checkbox"]:before {
+      box-shadow: 0 0 5px rgba(118,255,0,.6);
+      left: 2rem;
+    }
   }
 
   &.open {
@@ -57,8 +113,12 @@ const StyledSettings = styled.div`
   }
 
   article {
-    padding: 2rem 0;
+    text-align: center;
+    padding: 1.5rem 0 0;
     font-size: 1.2rem;
+    @media screen and (max-width: 350px) {
+      font-size: 1.7rem;
+    }
   }
 `;
 

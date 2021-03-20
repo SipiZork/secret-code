@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Button from '../Button/Button';
 
 const NewGame = ({tries, startNewGame, access}) => {
   return (
@@ -7,7 +8,7 @@ const NewGame = ({tries, startNewGame, access}) => {
       <div className="content">
         <h3>Kijutottál</h3>
         <p>{tries} próbálkozásra volt szükséged a sikerhez</p>
-        <button onClick={() => startNewGame()}>Új játék</button>
+        <Button text="Új játék" onClick={() => startNewGame()} />
       </div>
     </StlyedNewGame>
   )
@@ -33,20 +34,36 @@ const StlyedNewGame = styled.div`
   .content {
     padding: 1rem;
     background: rgb(5,5,5);
-    background: linear-gradient(52deg, rgba(50,50,50,1) 0%, rgba(53,53,53,1) 73%, rgba(100,100,100,1) 100%);
+    background: linear-gradient(52deg, rgba(5,5,5,1) 0%, rgba(40,40,40,1) 85%, rgba(80,80,80,1) 100%);
     border-radius: 5px;
-    box-shadow: 5px 5px 10px 1px rgba(255,255,255,.4);
+    box-shadow: 0 0 5px rgba(255,255,255,.4);
     width: 400px;
     height: 300px;
-    color: white;
+    color: #d7d7d7;
     display: flex;
     gap: .5rem;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+
+    @media screen and (max-width: 600px) {
+      width: 300px;
+    }
+    @media screen and (max-width: 350px) {
+      width: 90vw;
+    }
+    h3 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+    }
 
     button {
-      padding: .5rem;
+      margin-top: 1rem;
     }
+
   }
 `;
 

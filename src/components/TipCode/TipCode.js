@@ -62,24 +62,6 @@ const TipCode = ({ inputs, setInputs, addNewTip, multiplyNumber, secretCode, for
   }
 
   const onKeyDown = (e) => {
-    const inputs = [
-      {
-        index: 'code1',
-        ref: code1Input
-      }, {
-        index: 'code2',
-        ref: code2Input
-      }, {
-        index: 'code3',
-        ref: code3Input
-      }, {
-        index: 'code4',
-        ref: code4Input
-      }, {
-        index: 'code5',
-        ref: code5Input
-      }
-    ];
     const index = inputs.findIndex(input => input.index === e.target.name);
     /*if (e.keyCode === 39 && !e.shiftKey) {
       if (index + 1 < 5) {
@@ -102,6 +84,22 @@ const TipCode = ({ inputs, setInputs, addNewTip, multiplyNumber, secretCode, for
     }
   }
 
+  const onClick = (e) => {
+    let index = inputs.findIndex(input => input.index === e.target.name);
+    if (e.target.value !== '') {
+      /*inputs[index].ref.current.focus();*/
+      let newInputs = [...inputs];
+      newInputs.map((input, i) => {
+        if (i === index) {
+          input.active = true;
+        } else {
+          input.active = false;
+        }
+      });
+      setInputs(newInputs);
+    }
+  }
+
   useEffect(() => {
     code1Input.current.focus();
   }, [])
@@ -110,11 +108,11 @@ const TipCode = ({ inputs, setInputs, addNewTip, multiplyNumber, secretCode, for
   return (
     <div>
       <Form onSubmit={setOwnCode}>
-        <input ref={code1Input} onKeyDown={onKeyDown} type="number" name="code1" maxLength="1" min="0" max="9" value={formData.code1} onChange={onChange}/>
-        <input ref={code2Input} onKeyDown={onKeyDown} type="number" name="code2" maxLength="1" min="0" max="9" value={formData.code2} onChange={onChange} />
-        <input ref={code3Input} onKeyDown={onKeyDown} type="number" name="code3" maxLength="1" min="0" max="9" value={formData.code3} onChange={onChange} />
-        <input ref={code4Input} onKeyDown={onKeyDown} type="number" name="code4" maxLength="1" min="0" max="9" value={formData.code4} onChange={onChange} />
-        <input ref={code5Input} onKeyDown={onKeyDown} type="number" name="code5" maxLength="1" min="0" max="9" value={formData.code5} onChange={onChange} />
+        <input ref={code1Input} onClick={onClick} onKeyDown={onKeyDown} type="number" name="code1" maxLength="1" min="0" max="9" value={formData.code1} onChange={onChange}/>
+        <input ref={code2Input} onClick={onClick} onKeyDown={onKeyDown} type="number" name="code2" maxLength="1" min="0" max="9" value={formData.code2} onChange={onChange} />
+        <input ref={code3Input} onClick={onClick} onKeyDown={onKeyDown} type="number" name="code3" maxLength="1" min="0" max="9" value={formData.code3} onChange={onChange} />
+        <input ref={code4Input} onClick={onClick} onKeyDown={onKeyDown} type="number" name="code4" maxLength="1" min="0" max="9" value={formData.code4} onChange={onChange} />
+        <input ref={code5Input} onClick={onClick} onKeyDown={onKeyDown} type="number" name="code5" maxLength="1" min="0" max="9" value={formData.code5} onChange={onChange} />
         <button onSubmit={setOwnCode} style={{ display: 'none' }}>Küld</button>
       </Form>
     </div>

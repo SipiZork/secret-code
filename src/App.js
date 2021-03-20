@@ -73,6 +73,9 @@ const App = () => {
       }
       if (counter === 5) {
         setAccess(true);
+        accessGranted.play();
+      } else {
+        accessDenied.play();
       }
     });
     setCodeHistory([newTips, ...codeHistory]);
@@ -92,15 +95,6 @@ const App = () => {
     generateCode();
   }, []);
 
-  useEffect(() => {
-    if (access) {
-      accessGranted.play();
-    }
-    if (!access) {
-      accessDenied.play();
-    }
-  }, [codeHistory]);
-
   const changeMultiplyNumbers = () => {
     setMultiplyNumber(!multiplyNumber);
     generateCode(!multiplyNumber);
@@ -111,14 +105,14 @@ const App = () => {
     <Body>
       <GlobalStyle />
       <NewGame startNewGame={startNewGame} access={access} tries={codeHistory.length} />
-      <div className={`info ${ infoOpen ? 'open' : 'close'}`} onClick={() => setInfoOpen(!infoOpen)} >
+      <div className={`info ${ infoOpen ? 'open' : 'close'} ${settingsOpen ? ' hide' : ''}`} onClick={() => setInfoOpen(!infoOpen)} >
         <FontAwesomeIcon icon={faInfoCircle}/>
       </div>
       <Info infoOpen={infoOpen} />
-      <div className={`settings ${ settingsOpen ? 'open' : 'close'}`} onClick={() => setSettingsOpen(!settingsOpen)} >
+      <div className={`settings ${ settingsOpen ? 'open' : 'close'} ${infoOpen ? ' hide' : ''}`} onClick={() => setSettingsOpen(!settingsOpen)} >
         <FontAwesomeIcon icon={faCog}/>
       </div>
-      <Settings settingsOpen={settingsOpen} multiplyNumber={multiplyNumber} changeMultiplyNumbers={changeMultiplyNumbers} historyPosition={historyPosition} setHistoryPosition={setHistoryPosition} />
+      <Settings settingsOpen={settingsOpen} multiplyNumber={multiplyNumber} changeMultiplyNumbers={changeMultiplyNumbers} historyPosition={historyPosition} setHistoryPosition={setHistoryPosition} startNewGame={startNewGame} />
       <Table className={historyPosition ? 'left' : 'right'}>
         <Board secretCode={secretCode} codeHistory={codeHistory} addNewTip={addNewTip} multiplyNumber={multiplyNumber} access={access} />
         <FullHistory codeHistory={codeHistory} />
@@ -132,6 +126,7 @@ export default App;
 const Table = styled.div`
   display: flex;
   justify-content: center;
+  height: 400px;
   align-items: center;
   border-radius: .5em;
   background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
@@ -145,6 +140,17 @@ const Table = styled.div`
   
   &.left {
     flex-direction: row-reverse;
+  }
+
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+    height: 80vh;
+    &.left {
+      flex-direction: column;
+    }
+  }
+  @media screen and (max-width: 350px) {
+    width: 100vh;
   }
 `;
 
@@ -170,6 +176,12 @@ const Body = styled.div`
     justify-content: center;
     align-items: center;
     color: white;
+   
+    @media screen and (max-width: 350px) { 
+      &.hide {
+        display: none;
+      }
+    }
 
     &.open {
       color: #76ff00;

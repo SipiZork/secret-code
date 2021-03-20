@@ -145,12 +145,15 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
 
 const CodePanel = styled.div`
   width: 350px;
-  height: 400px;
+  height: 100%;
   background: rgb(117,117,117);
   background: linear-gradient(214deg, rgba(117,117,117,1) 0%, rgba(54,54,54,1) 27%, rgba(46,46,46,1) 100%);
   padding: .05rem;
   display: flex;
   flex-direction: column;
+  @media screen and (max-width: 350px) {
+    width: 100%;
+  }
 `;
 
 const StyledBoard = styled.div`
