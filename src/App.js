@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { isMobile } from 'react-device-detect';
 import Settings from './components/Settings/Settings';
 import Info from './components/Info/Info';
 import GlobalStyle from './components/GlobalyStyle';
@@ -20,9 +21,41 @@ const App = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [access, setAccess] = useState(false);
+  const [mobile, setMobile] = useState(isMobile);
 
   const accessDenied = new Audio(accessDeniedSound);
   const accessGranted = new Audio(accessGrantedSound);
+
+  
+  const code1Input = useRef(null);
+  const code2Input = useRef(null);
+  const code3Input = useRef(null);
+  const code4Input = useRef(null);
+  const code5Input = useRef(null);
+
+  const [inputs, setInputs] = useState([
+    {
+      active: true,
+      index: 'code1',
+      ref: code1Input
+    }, {
+      active: false,
+      index: 'code2',
+      ref: code2Input
+    }, {
+      active: false,
+      index: 'code3',
+      ref: code3Input
+    }, {
+      active: false,
+      index: 'code4',
+      ref: code4Input
+    }, {
+      active: false,
+      index: 'code5',
+      ref: code5Input
+    }
+  ]);
 
   const generateCode = (multi = multiplyNumber) => {
     let newSecretCode = [];
@@ -85,6 +118,9 @@ const App = () => {
     generateCode();
     setCodeHistory([]);
     setAccess(false);
+    if (!mobile) {
+      inputs[0].ref.current.focus();
+    }
   }
 
   useEffect(() => {
@@ -114,7 +150,21 @@ const App = () => {
       </div>
       <Settings settingsOpen={settingsOpen} multiplyNumber={multiplyNumber} changeMultiplyNumbers={changeMultiplyNumbers} historyPosition={historyPosition} setHistoryPosition={setHistoryPosition} startNewGame={startNewGame} />
       <Table className={historyPosition ? 'left' : 'right'}>
-        <Board secretCode={secretCode} codeHistory={codeHistory} addNewTip={addNewTip} multiplyNumber={multiplyNumber} access={access} />
+        <Board
+          secretCode={secretCode}
+          codeHistory={codeHistory}
+          addNewTip={addNewTip}
+          multiplyNumber={multiplyNumber}
+          access={access}
+          mobile={mobile}
+          inputs={inputs}
+          setInputs={setInputs}
+          code1Input={code1Input}
+          code2Input={code2Input}
+          code3Input={code3Input}
+          code4Input={code4Input}
+          code5Input={code5Input}
+        />
         <FullHistory codeHistory={codeHistory} />
       </Table>
     </Body>

@@ -4,8 +4,9 @@ import TipCode from '../TipCode/TipCode';
 import History from '../History/History';
 import Display from '../Display/Display';
 import Numpad from '../Numpad/Numpad';
+import { isMobile } from 'react-device-detect';
 
-const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, access }) => {
+const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, access, mobile, inputs, setInputs, code1Input, code2Input, code3Input, code4Input, code5Input }) => {
 
   const [formData, setFromData] = useState({
     code1: 0,
@@ -14,36 +15,6 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
     code4: 0,
     code5: 0
   });
-
-  const code1Input = useRef(null);
-  const code2Input = useRef(null);
-  const code3Input = useRef(null);
-  const code4Input = useRef(null);
-  const code5Input = useRef(null);
-
-  const [inputs, setInputs] = useState([
-    {
-      active: true,
-      index: 'code1',
-      ref: code1Input
-    }, {
-      active: false,
-      index: 'code2',
-      ref: code2Input
-    }, {
-      active: false,
-      index: 'code3',
-      ref: code3Input
-    }, {
-      active: false,
-      index: 'code4',
-      ref: code4Input
-    }, {
-      active: false,
-      index: 'code5',
-      ref: code5Input
-    }
-  ]);
 
   const setActiveFirst = () => {
     let newInputs = [...inputs];
@@ -61,13 +32,16 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
     const active = inputs.find(input => input.active === true);
     const index = inputs.findIndex(input => input === active);
     if (formData[active.index] !== '') {
-      inputs[index].ref.current.focus();
+      if (!mobile) {
+        inputs[index].ref.current.focus();
+      }
       setFromData({
         ...formData,
         [active.index]: ''
       });
     } else {
       if (index - 1 >= 0) {
+        if(!mobile)
         inputs[index - 1].ref.current.focus();
         setFromData({
           ...formData,
@@ -95,7 +69,9 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
       [active.index]: input
     });
     if (index + 1 < 5) {
-      inputs[index + 1].ref.current.focus();
+      if (!mobile) {
+        inputs[index + 1].ref.current.focus();
+      }
       let newInputs = [...inputs];
       newInputs.map((input, i) => {
         if (i === index + 1) {
@@ -111,14 +87,12 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
   const setTip = () => {
     addNewTip([parseInt(formData.code1), parseInt(formData.code2), parseInt(formData.code3), parseInt(formData.code4), parseInt(formData.code5)]);
     setFromData({ code1: 0, code2: 0, code3: 0, code4: 0, code5: 0 });
-    code1Input.current.focus();
+    if (!mobile) {
+      code1Input.current.focus();
+    }
     setActiveFirst();
   }
-
-  useEffect(() => {
-    //console.log(inputs);
-  }, [inputs])
-
+  
   return (
 
     <CodePanel>
@@ -132,6 +106,7 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
         setTip={setTip}
         inputs={inputs}
         setInputs={setInputs}
+        mobile={mobile}
       />
       <Numpad formData={formData} setFromData={setFromData} setData={setData} delCharacter={delCharacter} setTip={setTip} />
     </CodePanel>

@@ -16,7 +16,8 @@ const Display = ({
   setTip,
   inputs,
   setInputs,
-  access
+  access,
+  mobile
 }) => {
   return (
     <StyledDisplay>
@@ -30,6 +31,7 @@ const Display = ({
         setTip={setTip}
         inputs={inputs}
         setInputs={setInputs}
+        mobile={mobile}
       />
       <p className={!access ? 'locked' : 'open'}>{!access ? 'Zárva' : 'Nyitva' }</p>
     </StyledDisplay>

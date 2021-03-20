@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
-const TipCode = ({ inputs, setInputs, addNewTip, multiplyNumber, secretCode, formData, setFromData, code1Input, code2Input, code3Input, code4Input, code5Input, setActiveFirst, setTip }) => {
+const TipCode = ({ mobile, inputs, setInputs, addNewTip, multiplyNumber, secretCode, formData, setFromData, code1Input, code2Input, code3Input, code4Input, code5Input, setActiveFirst, setTip }) => {
 
   const onChange = (e) => {
     const index = inputs.findIndex(input => input.index === e.target.name);
@@ -12,7 +12,9 @@ const TipCode = ({ inputs, setInputs, addNewTip, multiplyNumber, secretCode, for
       });
       if (index + 1 < 5) {
         if (e.target.value !== '') {
-          inputs[index + 1].ref.current.focus();
+          if (!mobile) {
+            inputs[index + 1].ref.current.focus();
+          }
           let newInputs = [...inputs];
           newInputs.map((input, i) => {
             if (i === index + 1) {
@@ -31,7 +33,9 @@ const TipCode = ({ inputs, setInputs, addNewTip, multiplyNumber, secretCode, for
       });
       if (index + 1 < 5) {
         if (e.target.value !== '') {
-          inputs[index + 1].ref.current.focus();
+          if (!mobile) {
+            inputs[index + 1].ref.current.focus();
+          }
           let newInputs = [...inputs];
           newInputs.map((input, i) => {
             if (i === index + 1) {
@@ -78,8 +82,10 @@ const TipCode = ({ inputs, setInputs, addNewTip, multiplyNumber, secretCode, for
         ...formData,
         [e.target.name]: 0
       });
-      if (index - 1 >= 0) {
-        inputs[index - 1].ref.current.focus();
+      if (!mobile) {
+        if (index - 1 >= 0) {
+          inputs[index - 1].ref.current.focus();
+        }
       }
     }
   }
@@ -101,7 +107,9 @@ const TipCode = ({ inputs, setInputs, addNewTip, multiplyNumber, secretCode, for
   }
 
   useEffect(() => {
-    code1Input.current.focus();
+    if (!mobile) {
+      code1Input.current.focus();
+    }
   }, [])
 
 
