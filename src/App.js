@@ -23,12 +23,13 @@ const App = () => {
   const [infoOpen, setInfoOpen] = useState(false);
   const [access, setAccess] = useState(false);
   const [mobile] = useState(isMobile);
-  const [startTime, setStartTime] = useState(30);
-  const [time, setTime] = useState(30);
+  const [startTime, setStartTime] = useState(45);
+  const [time, setTime] = useState(45);
   const [timerOn, setTimerOn] = useState(false);
   const [timeOver, setTimeOver] = useState(false);
-  const [level, setLevel] = useState('medium');
+  const [level, setLevel] = useState('normal');
   const [newGameShow, setNewGameShow] = useState(true);
+  let intervalId;
 
   const accessDenied = new Audio(accessDeniedSound);
   const accessGranted = new Audio(accessGrantedSound);
@@ -83,10 +84,21 @@ const App = () => {
         existsNumbers.splice(random, 1);
       }
     }
+    setSecretCode([1,1,1,1,1]);
     setSecretCode(newSecretCode);
   }
 
   const addNewTip = (tippedNumbers) => {
+    if (codeHistory.length === 0) {
+      intervalId = setInterval(() => {
+        if (timeRef.current < 2) {
+          clearInterval(intervalId);
+        }
+        timeRef.current = timeRef.current - 1;
+        setTime(state => state - 1);
+      }, 1000);
+      setTimerOn(true);
+    }
     if (!access) {
       let newTips = [];
       let indexes = [];
@@ -125,6 +137,12 @@ const App = () => {
         if (counter === 5) {
           setAccess(true);
           accessGranted.play();
+          setTimerOn(false);
+          setNewGameShow(true);
+          var highestTimeoutId = setTimeout(";");
+          for (var y = 0 ; y < highestTimeoutId ; y++) {
+                clearTimeout(y); 
+          }
         } else {
           accessDenied.play();
         }
@@ -183,20 +201,6 @@ const App = () => {
       setTimerOn(false);
     }
   }, [time]);
-
-  useEffect(() => {
-    if (codeHistory.length === 1 && !timerOn) {
-      let intervalId = setInterval(() => {
-        if (timeRef.current < 2) {
-          clearInterval(intervalId);
-        }
-        timeRef.current = timeRef.current - 1;
-        setTime(state => state - 1);
-      }, 1000);
-      
-      setTimerOn(true);
-    }
-  }, [codeHistory]);
 
   const changeMultiplyNumbers = () => {
     setMultiplyNumber(!multiplyNumber);
