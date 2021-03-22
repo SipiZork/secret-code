@@ -1,20 +1,9 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import TipCode from '../TipCode/TipCode';
-import History from '../History/History';
 import Display from '../Display/Display';
 import Numpad from '../Numpad/Numpad';
-import { isMobile } from 'react-device-detect';
 
-const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, access, mobile, inputs, setInputs, code1Input, code2Input, code3Input, code4Input, code5Input }) => {
-
-  const [formData, setFromData] = useState({
-    code1: 0,
-    code2: 0,
-    code3: 0,
-    code4: 0,
-    code5: 0
-  });
+const Board = ({ secretCode, addNewTip, formData, setFromData, multiplyNumber, access, mobile, inputs, setInputs, code1Input, code2Input, code3Input, code4Input, code5Input, time, timerOn, timeOver }) => {
 
   const setActiveFirst = () => {
     let newInputs = [...inputs];
@@ -24,6 +13,7 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
       } else {
         input.active = false;
       }
+      return null;
     });
     setInputs(newInputs);
   }
@@ -55,6 +45,7 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
           } else {
             input.active = false;
           }
+          return null;
         });
         setInputs(newInputs);
       }
@@ -79,6 +70,7 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
         } else {
           input.active = false;
         }
+        return null;
       });
       setInputs(newInputs);
     }
@@ -107,14 +99,12 @@ const Board = ({ secretCode, addNewTip, codeHistory, multiplyNumber, locked, acc
         inputs={inputs}
         setInputs={setInputs}
         mobile={mobile}
+        time={time}
+        timerOn={timerOn}
+        timeOver={timeOver}
       />
       <Numpad formData={formData} setFromData={setFromData} setData={setData} delCharacter={delCharacter} setTip={setTip} />
     </CodePanel>
-
-    /*<StyledBoard>
-      <TipCode addNewTip={addNewTip} multiplyNumber={multiplyNumber} />
-      <History codeHistory={codeHistory} />
-    </StyledBoard>*/
   )
 }
 
@@ -129,16 +119,6 @@ const CodePanel = styled.div`
   @media screen and (max-width: 350px) {
     width: 100%;
   }
-`;
-
-const StyledBoard = styled.div`
-  padding: 1.5rem;
-  width: 400px;
-  min-height: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
-  align-items: center;
 `;
 
 export default Board;

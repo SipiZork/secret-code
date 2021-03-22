@@ -11,6 +11,7 @@ import FullHistory from './components/History/FullHistory';
 import NewGame from './components/NewGame/NewGame';
 import accessDeniedSound from './assets/sounds/access_denied.mp3';
 import accessGrantedSound from './assets/sounds/access_grandted.mp3';
+import boomSound from './assets/sounds/boom.mp3';
 
 const App = () => {
 
@@ -21,17 +22,32 @@ const App = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [access, setAccess] = useState(false);
-  const [mobile, setMobile] = useState(isMobile);
+  const [mobile] = useState(isMobile);
+  const [startTime, setStartTime] = useState(30);
+  const [time, setTime] = useState(30);
+  const [timerOn, setTimerOn] = useState(false);
+  const [timeOver, setTimeOver] = useState(false);
+  const [level, setLevel] = useState('medium');
+  const [newGameShow, setNewGameShow] = useState(true);
 
   const accessDenied = new Audio(accessDeniedSound);
   const accessGranted = new Audio(accessGrantedSound);
-
+  const boom = new Audio(boomSound);
+  
+  const [formData, setFromData] = useState({
+    code1: 0,
+    code2: 0,
+    code3: 0,
+    code4: 0,
+    code5: 0
+  });
   
   const code1Input = useRef(null);
   const code2Input = useRef(null);
   const code3Input = useRef(null);
   const code4Input = useRef(null);
   const code5Input = useRef(null);
+  const timeRef = useRef(time);
 
   const [inputs, setInputs] = useState([
     {
@@ -67,60 +83,77 @@ const App = () => {
         existsNumbers.splice(random, 1);
       }
     }
-    //setSecretCode([3,6,9,5,0]);
     setSecretCode(newSecretCode);
   }
 
   const addNewTip = (tippedNumbers) => {
-    let newTips = [];
-    let indexes = [];
-    let counter = 0;
-    let secretCodeArray = [...secretCode];
-    tippedNumbers.map((number, i) => {
-      let goodPlace = false;
-      let examined = false;
-      let goodNumber = false;
-      if (number === secretCodeArray[i]) {
-        counter++;
-        goodPlace = true;
-        examined = true;
-        goodNumber = true;
-      }
-      newTips.push({
-        number: number,
-        examined,
-        goodNumber,
-        goodPlace,
-      });
-    });
-    tippedNumbers.map((number, i) => {
-      if (!newTips[i].examined) {
-        let searchNext = true;
-        secretCodeArray.map((secretNumber, n) => {
-          if (secretNumber === number && n !== i && !newTips[n].examined && !indexes.includes(n) && searchNext) {
-            indexes.push(n);
-            searchNext = false;
-            newTips[i].goodNumber = true;
-          } 
+    if (!access) {
+      let newTips = [];
+      let indexes = [];
+      let counter = 0;
+      let secretCodeArray = [...secretCode];
+      tippedNumbers.map((number, i) => {
+        let goodPlace = false;
+        let examined = false;
+        let goodNumber = false;
+        if (number === secretCodeArray[i]) {
+          counter++;
+          goodPlace = true;
+          examined = true;
+          goodNumber = true;
+        }
+        newTips.push({
+          number: number,
+          examined,
+          goodNumber,
+          goodPlace,
         });
-      }
-      if (counter === 5) {
-        setAccess(true);
-        accessGranted.play();
-      } else {
-        accessDenied.play();
-      }
-    });
-    setCodeHistory([newTips, ...codeHistory]);
+        return null;
+      });
+      tippedNumbers.map((number, i) => {
+        if (!newTips[i].examined) {
+          let searchNext = true;
+          secretCodeArray.map((secretNumber, n) => {
+            if (secretNumber === number && n !== i && !newTips[n].examined && !indexes.includes(n) && searchNext) {
+              indexes.push(n);
+              searchNext = false;
+              newTips[i].goodNumber = true;
+            }
+            return null;
+          });
+        }
+        if (counter === 5) {
+          setAccess(true);
+          accessGranted.play();
+        } else {
+          accessDenied.play();
+        }
+        return null;
+      });
+      setCodeHistory([newTips, ...codeHistory]);
+    }
   }
 
   const startNewGame = () => {
     generateCode();
     setCodeHistory([]);
     setAccess(false);
+    setSettingsOpen(false);
+    setTimeOver(false);
+    setTime(startTime);
+    setTimerOn(false);
+    setNewGameShow(true);
+    timeRef.current = startTime;
     if (!mobile) {
       inputs[0].ref.current.focus();
     }
+    setFromData({
+      code1: 0,
+      code2: 0,
+      code3: 0,
+      code4: 0,
+      code5: 0,
+    })
   }
 
   useEffect(() => {
@@ -128,8 +161,42 @@ const App = () => {
   }, [secretCode])
 
   useEffect(() => {
+    if (access || timeOver) {
+      code1Input.current.blur();
+      code2Input.current.blur();
+      code3Input.current.blur();
+      code4Input.current.blur();
+      code5Input.current.blur();
+    }
+  }, [access, timeOver])
+
+  useEffect(() => {
     generateCode();
   }, []);
+
+  useEffect(() => {
+    if (time <= 0 && !timeOver && timerOn) {
+      setTimeOver(true);
+      if (!access) {
+        boom.play();
+      }
+      setTimerOn(false);
+    }
+  }, [time]);
+
+  useEffect(() => {
+    if (codeHistory.length === 1 && !timerOn) {
+      let intervalId = setInterval(() => {
+        if (timeRef.current < 2) {
+          clearInterval(intervalId);
+        }
+        timeRef.current = timeRef.current - 1;
+        setTime(state => state - 1);
+      }, 1000);
+      
+      setTimerOn(true);
+    }
+  }, [codeHistory]);
 
   const changeMultiplyNumbers = () => {
     setMultiplyNumber(!multiplyNumber);
@@ -137,10 +204,27 @@ const App = () => {
     setCodeHistory([]);
   }
 
+  const changeLevel = (selectedLevel) => {
+    setLevel(selectedLevel);
+    if (selectedLevel === 'easy') {
+      setStartTime(60);
+      setTime(60);
+    } else if (selectedLevel === 'normal') {
+      setStartTime(45);
+      setTime(45);
+    } else if (selectedLevel === 'medium') {
+      setStartTime(30);
+      setTime(30);
+    } else if (selectedLevel === 'hard') {
+      setStartTime(20);
+      setTime(20);
+    }
+  }
+
   return (
     <Body>
       <GlobalStyle />
-      <NewGame startNewGame={startNewGame} access={access} tries={codeHistory.length} />
+      <NewGame newGameShow={newGameShow} setNewGameShow={setNewGameShow} startNewGame={startNewGame} access={access} timeOver={timeOver} tries={codeHistory.length} />
       <div className={`info ${ infoOpen ? 'open' : 'close'} ${settingsOpen ? ' hide' : ''}`} onClick={() => setInfoOpen(!infoOpen)} >
         <FontAwesomeIcon icon={faInfoCircle}/>
       </div>
@@ -148,7 +232,7 @@ const App = () => {
       <div className={`settings ${ settingsOpen ? 'open' : 'close'} ${infoOpen ? ' hide' : ''}`} onClick={() => setSettingsOpen(!settingsOpen)} >
         <FontAwesomeIcon icon={faCog}/>
       </div>
-      <Settings settingsOpen={settingsOpen} multiplyNumber={multiplyNumber} changeMultiplyNumbers={changeMultiplyNumbers} historyPosition={historyPosition} setHistoryPosition={setHistoryPosition} startNewGame={startNewGame} />
+      <Settings level={level} changeLevel={changeLevel} settingsOpen={settingsOpen} multiplyNumber={multiplyNumber} changeMultiplyNumbers={changeMultiplyNumbers} historyPosition={historyPosition} setHistoryPosition={setHistoryPosition} startNewGame={startNewGame} setSettingsOpen={setSettingsOpen} timerOn={timerOn} />
       <Table className={historyPosition ? 'left' : 'right'}>
         <Board
           secretCode={secretCode}
@@ -164,6 +248,11 @@ const App = () => {
           code3Input={code3Input}
           code4Input={code4Input}
           code5Input={code5Input}
+          time={time}
+          timeOver={timeOver}
+          timerOn={timerOn}
+          formData={formData}
+          setFromData={setFromData}
         />
         <FullHistory codeHistory={codeHistory} />
       </Table>
@@ -218,14 +307,14 @@ const Body = styled.div`
     top: 1rem;
     font-size: 2.5rem;
     cursor: pointer;
-    z-index: 10;
+    z-index: 55;
     transition: color .35s;
     height: 3rem;
     width: 3rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: #d7d7d7;
    
     @media screen and (max-width: 350px) { 
       &.hide {

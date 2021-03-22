@@ -6,15 +6,25 @@ const Info = ({ infoOpen }) => {
     <StyledInfo className={infoOpen ? 'open' : 'close'}>
       <h2>Info</h2>
       <article>
-        <p>A kód nélkül nem tudsz kijutni a szobából.</p>
-        <p>Találd ki a kódot, minél gyorsabban.</p>
+        <p>A bomba hamarosan robban.</p>
+        <p>Az időzítő az első tipp leadásának pillanatában indul el, találd ki a számkódot, mielőtt lejárna az idő, és hatástalanítsd a bombát.</p>
         <p>Egy szám többször is előfordulhat a kódban.</p>
+        <p>A hátralévő időt a kódpanel kijelzőjének jobb oldalán láthatod.</p>
         <p>Ha tippeltél, az előzmények lesznek a segítségedre a következő tippedhez.</p>
         <p>Ha a tippben szereplő szám:</p>
         <ul> 
-            <li><span class="green">zöld</span> színnel jelenik meg a szám, akkor a szám jó és jó helyen is van</li>
-            <li><span class="yellow">sárga</span> színnel jelenik meg a szám, akkor a szám jó, de rossz helyen van</li>
-            <li><span class="red">vörös</span> színnel jelenik meg a szám, akkor a szám egyáltalán nem szerep a kódban</li>
+            <li><span className="green">zöld</span> színnel jelenik meg a szám, akkor a szám jó és jó helyen is van</li>
+            <li><span className="yellow">sárga</span> színnel jelenik meg a szám, akkor a szám jó, de rossz helyen van</li>
+            <li><span className="red">vörös</span> színnel jelenik meg a szám, akkor a szám egyáltalán nem szerep a kódban</li>
+        </ul>
+        <h3>Nehézségi szint</h3>
+        <p>A nehézségi szint határozza meg a hatástalnításra rendelkezésre álló időt.</p>
+        <p>Két játék között van lehetőséged állítani a szintet</p>
+        <ul>
+          <li>Könnyű: 60mp</li>
+          <li>Normál: 45mp</li>
+          <li>Nehéz: 30mp</li>
+          <li>Impassibru: 20mp</li>
         </ul>
         <h3>Egyszerű mód</h3>
         <p>Egyszerű módban minden szám csak egyszer szerepelhet a kódban</p>
@@ -37,11 +47,20 @@ const StyledInfo = styled.div`
   opacity: 0;
   display: flex;
   flex-direction: column;
-  z-index: 5;
+  z-index: 54;
   gap: .5rem;
   background: rgb(5,5,5);
   color: rgb(180,180,180);
   background: linear-gradient(-52deg, rgba(5,5,5,1) 0%, rgba(8,8,8,1) 73%, rgba(56,56,56,1) 100%);
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: .25rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgb(150,150,150);
+  }
 
   @media screen and (max-width: 350px) {
     width: 100vw;
@@ -102,6 +121,11 @@ const StyledInfo = styled.div`
         &:nth-child(3) {
           &:before {
             color: red;
+          }
+        }
+        &:nth-child(4) {
+          &:before {
+            color: rgb(70,70,70);
           }
         }
         span {

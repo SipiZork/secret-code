@@ -17,7 +17,10 @@ const Display = ({
   inputs,
   setInputs,
   access,
-  mobile
+  mobile,
+  time,
+  timeOver,
+  timerOn
 }) => {
   return (
     <StyledDisplay>
@@ -33,7 +36,7 @@ const Display = ({
         setInputs={setInputs}
         mobile={mobile}
       />
-      <p className={!access ? 'locked' : 'open'}>{!access ? 'Zárva' : 'Nyitva' }</p>
+      <p className={!access ? 'locked' : 'open'}>{!access && !timeOver ? time : !access && timeOver ? 'Felrobbantál' : 'Hatástalanítva' }</p>
     </StyledDisplay>
   )
 }
@@ -63,7 +66,7 @@ const StyledDisplay = styled.div`
 
     @keyframes pulse {
       0%, 100% {
-        opacity: .3;
+        opacity: .5;
       } 50% {
         opacity: 1;
       }

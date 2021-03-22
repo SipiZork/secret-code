@@ -1,13 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import Button from '../Button/Button';
 
-const NewGame = ({tries, startNewGame, access}) => {
+const NewGame = ({ tries, startNewGame, access, timeOver, newGameShow, setNewGameShow }) => {
+  
   return (
-    <StlyedNewGame className={access ? 'show' : ''}>
+    <StlyedNewGame className={(access || timeOver) && newGameShow ? 'show' : (access || timeOver) && !newGameShow ? 'hide' : ''}>
       <div className="content">
-        <h3>Kijutottál</h3>
-        <p>{tries} próbálkozásra volt szükséged a sikerhez</p>
+        <div className="close-icon" onClick={() => setNewGameShow(false)}>X</div>
+        <h3>{access ? 'Kijutottál' : !access && timeOver ? 'Felrobbantál' : ''}</h3>
+        {access && <p>{tries} próbálkozásra volt szükséged a sikerhez</p>}
         <Button text="Új játék" onClick={() => startNewGame()} />
       </div>
     </StlyedNewGame>
@@ -31,6 +33,14 @@ const StlyedNewGame = styled.div`
     display: flex;
   }
 
+  &.hide {
+    display: flex;
+    background: rgba(0,0,0,0);
+    .content {
+      display: none;
+    }
+  }
+
   .content {
     padding: 1rem;
     background: rgb(5,5,5);
@@ -45,6 +55,15 @@ const StlyedNewGame = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
+
+    .close-icon {
+      position: absolute;
+      right: 1rem;
+      top: .5rem;
+      cursor: pointer;
+      font-size: 2rem;
+    }
 
     @media screen and (max-width: 600px) {
       width: 300px;

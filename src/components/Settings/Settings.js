@@ -2,23 +2,38 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from '../Button/Button';
 
-const Settings = ({ settingsOpen, multiplyNumber, changeMultiplyNumbers, historyPosition, setHistoryPosition, startNewGame }) => {
+const Settings = ({ level, changeLevel, settingsOpen, multiplyNumber, changeMultiplyNumbers, historyPosition, setHistoryPosition, startNewGame, timerOn }) => {
+
   return (
     <StyledSettings className={settingsOpen ? 'open' : 'close'}>
       <h2>Beállítások</h2>
       <article>
-        <label>
-          Egyszerű mód {` `}
+        <div>
+          <p>Egyszerű mód</p>
           <input type="checkbox" checked={!multiplyNumber} onChange={() => changeMultiplyNumbers()} />
-        </label>
-        <label>
-          Bal oldali előzmények {` `}
+        </div>
+        <div>
+          <p>Bal oldali előzmények</p>
           <input type="checkbox" checked={historyPosition} onChange={() => setHistoryPosition(!historyPosition)} />
-        </label>
+        </div>
+        {!timerOn &&
+          <div>
+          <p>Nehézségi szint</p>
+          <select value={level} onChange={(e) => changeLevel(e.target.value)} >
+            <option value="easy">Könnyű</option>
+            <option value="normal">Normál</option>
+            <option value="medium">Nehéz</option>
+            <option value="hard">Impassibru</option>
+          </select>
+          
+          </div>
+        }
       </article>
-      <article>
-      <Button text="Új játék" onClick={() => startNewGame()} />
-      </article>
+      {!timerOn &&
+        <article>
+          <Button text="Új játék" onClick={() => startNewGame()} />
+        </article>
+      }
     </StyledSettings>
   )
 }
@@ -33,24 +48,24 @@ const StyledSettings = styled.div`
   transform: translateX(20rem);
   transition: transform .35s, opacity .35s;
   box-shadow: -5px 0 40px 2px rgba(255,255,255,.5);
-  color: white;
+  color: #d7d7d7;
   opacity: 0;
   display: flex;
   color: rgb(180,180,180);
   flex-direction: column;
   gap: .5rem;
   background: rgb(5,5,5);
-  z-index: 5;
+  z-index: 54;
   background: linear-gradient(52deg, rgba(5,5,5,1) 0%, rgba(8,8,8,1) 73%, rgba(56,56,56,1) 100%);
   @media screen and (max-width: 350px) {
     transform: translateX(100vw);
     width: 100vw;
   }
 
-  label {
+  div {
     display: block;
     margin-bottom: .5rem;
-    height: 2rem;
+    padding: .35rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -84,7 +99,7 @@ const StyledSettings = styled.div`
       height: 1rem;
       transform: scale(1.3);
       border-radius: 2rem;
-      background: white;
+      background: #d7d7d7;
       top: 0;
       left: 0;
       transition: all .35s;

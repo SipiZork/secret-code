@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 const TipCode = ({ mobile, inputs, setInputs, addNewTip, multiplyNumber, secretCode, formData, setFromData, code1Input, code2Input, code3Input, code4Input, code5Input, setActiveFirst, setTip }) => {
@@ -22,6 +22,7 @@ const TipCode = ({ mobile, inputs, setInputs, addNewTip, multiplyNumber, secretC
             } else {
               input.active = false;
             }
+            return null;
           });
           setInputs(newInputs);
         }
@@ -43,6 +44,7 @@ const TipCode = ({ mobile, inputs, setInputs, addNewTip, multiplyNumber, secretC
             } else {
               input.active = false;
             }
+            return null;
           });
           setInputs(newInputs);
         }
@@ -101,6 +103,7 @@ const TipCode = ({ mobile, inputs, setInputs, addNewTip, multiplyNumber, secretC
         } else {
           input.active = false;
         }
+        return null;
       });
       setInputs(newInputs);
     }
