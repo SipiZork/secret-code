@@ -258,7 +258,7 @@ const App = () => {
           formData={formData}
           setFromData={setFromData}
         />
-        <FullHistory codeHistory={codeHistory} />
+        <FullHistory codeHistory={codeHistory} newGameShow={newGameShow} timeOver={timeOver} access={access} />
       </Table>
     </Body>
   );

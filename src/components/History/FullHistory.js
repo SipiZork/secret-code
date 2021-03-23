@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const FullHistory = ({ codeHistory }) => {
+const FullHistory = ({ codeHistory, newGameShow, timeOver, access }) => {
   return (
-    <StyledFullHistory>
+    <StyledFullHistory className={(access || timeOver) && !newGameShow ? 'to-top' : ''}>
       <h3>Előzmények</h3>
       {codeHistory && codeHistory.map((code, i) => 
         <Line key={i}>
@@ -31,6 +31,10 @@ const StyledFullHistory = styled.div`
   background: rgb(5,5,5);
   background: linear-gradient(52deg, rgba(5,5,5,1) 0%, rgba(8,8,8,1) 73%, rgba(56,56,56,1) 100%);
 
+  &.to-top {
+    z-index: 60;
+  }
+
   @media screen and (max-width: 600px) {
     width: 350px;
   }
@@ -51,7 +55,7 @@ const StyledFullHistory = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background: red;
+    background: #d7d7d7;
   }
 `;
 

@@ -33,7 +33,7 @@ const StyledButton = styled.button`
   .bg {
     position: absolute;
     top: 0;
-    left: -1.5rem;
+    left: -2rem;
     height: 100%;
     z-index: 5;
     width: 0;
